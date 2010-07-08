@@ -1,0 +1,1 @@
+would be nice to use AspectJ pointcuts in Scala code - right?
