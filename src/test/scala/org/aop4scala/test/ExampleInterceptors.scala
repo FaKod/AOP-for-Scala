@@ -1,5 +1,6 @@
-package org.aop4scala
+package org.aop4scala.test
 
+import org.aop4scala.{Invocation, Interceptor}
 
 trait LoggingInterceptor extends Interceptor {
   val loggingPointcut = parser.parsePointcutExpression("execution(* *.foo(..))")

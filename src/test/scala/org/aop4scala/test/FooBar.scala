@@ -1,4 +1,4 @@
-package org.aop4scala
+package org.aop4scala.test
 
 
 trait Foo {
