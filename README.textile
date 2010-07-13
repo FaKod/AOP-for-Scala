@@ -1,1 +1,49 @@
-would be nice to use AspectJ pointcuts in Scala code - right?
+Playing around with and trying to re-implement an old "blog entry":http://java.dzone.com/articles/real-world-scala-managing-cros of Jonas Boner.
+
+h2. current look
+
+h1. Around Interception
+
+<pre>
+"enable Around interception" in {
+
+      val aspect = new Aspect("execution(* *.bar(..))")
+              with LoggingInterceptor
+              with TransactionInterceptor
+
+      val foo = aspect.create[Foo](new FooImpl)
+
+      foo.foo("foo")
+      foo.bar("bar")
+
+    }
+</pre>
+
+h1. Before Interception
+
+<pre>
+    "enable Before interception" in {
+
+      val aspect = new Aspect("execution(* *.bar(..))")
+              with InterceptBefore
+
+      val foo = aspect.create[Foo](new FooImpl)
+
+      foo.foo("foo")
+      foo.bar("bar")
+    }
+</pre>
+
+h1. After Interception
+
+<pre>
+    "enable After interception" in {
+      val aspect = new Aspect("execution(* *.bar(..))")
+              with InterceptAfter
+
+      val foo = aspect.create[Foo](new FooImpl)
+
+      foo.foo("foo")
+      foo.bar("bar")
+    }
+</pre>

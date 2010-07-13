@@ -1,21 +1,20 @@
 package org.aop4scala.test
 
-import org.aop4scala.{Invocation, Interceptor}
+import org.aop4scala._
 
-trait LoggingInterceptor extends Interceptor {
-  val loggingPointcut = parser.parsePointcutExpression("execution(* *.foo(..))")
-
-  abstract override def invoke(invocation: Invocation): AnyRef =
-    if (matches(loggingPointcut, invocation)) {
-      println("=====> Enter: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
-      val result = super.invoke(invocation)
-      println("=====> Exit: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
-      result
-    } else super.invoke(invocation)
-}
+//trait LoggingInterceptorOld extends Interceptor {
+//  //val loggingPointcut = parser.parsePointcutExpression("execution(* *.bar(..))")
+//
+//  abstract override def invoke(invocation: Invocation): AnyRef =
+//    if (matches(pointcut, invocation)) {
+//      println("=====> Enter: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
+//      val result = super.invoke(invocation)
+//      println("=====> Exit: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
+//      result
+//    } else super.invoke(invocation)
+//}
 
 trait TransactionInterceptor extends Interceptor {
-
   val matchingDeprecatedAnnotation = classOf[java.lang.Deprecated]
 
   abstract override def invoke(invocation: Invocation): AnyRef =
@@ -29,7 +28,39 @@ trait TransactionInterceptor extends Interceptor {
       } catch {
         case e: Exception =>
           println("=====> interceptor rollback since we got an exception")
-        e
+          e
       }
     } else super.invoke(invocation)
+}
+
+/**
+ *
+ */
+trait LoggingInterceptor extends AroundInterceptor {
+  def around(invoke: => AnyRef): AnyRef = {
+    println("=====> Enter Around Aspect")
+    val result = invoke
+    println("=====> Exit Around Aspect")
+    result
+  }
+}
+
+/**
+ *
+ */
+trait InterceptBefore extends BeforeInterceptor {
+  def before: AnyRef = {
+    println("=====> Enter Before Aspect")
+    null.asInstanceOf[AnyRef]
+  }
+}
+
+/**
+ *
+ */
+trait InterceptAfter extends AfterInterceptor {
+  def after(result: AnyRef): AnyRef = {
+    println("=====> Enter After Aspect with result: " + result)
+    null.asInstanceOf[AnyRef]
+  }
 }

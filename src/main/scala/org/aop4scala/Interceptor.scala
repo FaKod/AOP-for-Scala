@@ -8,7 +8,7 @@ trait Interceptor {
 
   protected def matches(pointcut: PointcutExpression, invocation: Invocation): Boolean = {
     pointcut.matchesMethodExecution(invocation.method).alwaysMatches ||
-            invocation.target.getClass.getDeclaredMethods.exists(pointcut.matchesMethodExecution(_).alwaysMatches) ||
+            //invocation.target.getClass.getDeclaredMethods.exists(pointcut.matchesMethodExecution(_).alwaysMatches) ||
             false
   }
 
@@ -20,4 +20,78 @@ trait Interceptor {
   }
 
   def invoke(invocation: Invocation): AnyRef
+
+  val pointcut: PointcutExpression
+}
+
+/**
+ * 
+ */
+abstract trait InterceptorInvoker extends Interceptor {
+
+//  def before: AnyRef
+//  def after(result: AnyRef): AnyRef
+//  def around(invoke: => AnyRef): AnyRef
+
+  protected def doInvoke(f: => AnyRef):AnyRef
+
+  abstract override def invoke(invocation: Invocation): AnyRef =
+    if (matches(pointcut, invocation)) {
+      doInvoke(super.invoke(invocation))
+    } else
+      super.invoke(invocation)
+}
+
+/**
+ *
+ */
+trait BeforeInterceptor extends InterceptorInvoker {
+  def before: AnyRef
+
+//  abstract override def invoke(invocation: Invocation): AnyRef =
+//    if (matches(pointcut, invocation)) {
+//      before
+//      super.invoke(invocation)
+//    } else
+//      super.invoke(invocation)
+
+  protected def doInvoke(f: => AnyRef) = {
+    before
+    f
+  }
+
+}
+
+/**
+ *
+ */
+trait AfterInterceptor extends InterceptorInvoker {
+  def after(result: AnyRef): AnyRef
+
+//  abstract override def invoke(invocation: Invocation): AnyRef =
+//    if (matches(pointcut, invocation)) {
+//      after(super.invoke(invocation))
+//    } else
+//      super.invoke(invocation)
+
+  protected def doInvoke(f: => AnyRef) = {
+    after(f)
+  }
+}
+
+/**
+ * 
+ */
+trait AroundInterceptor extends InterceptorInvoker {
+  def around(invoke: => AnyRef): AnyRef
+
+//  abstract override def invoke(invocation: Invocation): AnyRef =
+//    if (matches(pointcut, invocation)) {
+//      around(super.invoke(invocation))
+//    } else
+//      super.invoke(invocation)
+
+  protected def doInvoke(f: => AnyRef) = {
+    around(f)
+  }
 }
