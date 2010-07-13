@@ -24,8 +24,8 @@ trait TransactionInterceptor extends Interceptor {
 /**
  *
  */
-trait LoggingInterceptor extends AroundInterceptor {
-  def around(invoke: => AnyRef): AnyRef = {
+trait InterceptorAround extends AroundInterceptor {
+  override def around(invoke: => AnyRef): AnyRef = {
     println("=====> Enter Around Aspect")
     val result = invoke
     println("=====> Exit Around Aspect")
@@ -37,7 +37,7 @@ trait LoggingInterceptor extends AroundInterceptor {
  *
  */
 trait InterceptBefore extends BeforeInterceptor {
-  def before: AnyRef = {
+  override def before: AnyRef = {
     println("=====> Enter Before Aspect")
     null.asInstanceOf[AnyRef]
   }
@@ -47,7 +47,7 @@ trait InterceptBefore extends BeforeInterceptor {
  *
  */
 trait InterceptAfter extends AfterInterceptor {
-  def after(result: AnyRef): AnyRef = {
+  override def after(result: AnyRef): AnyRef = {
     println("=====> Enter After Aspect with result: " + result)
     null.asInstanceOf[AnyRef]
   }

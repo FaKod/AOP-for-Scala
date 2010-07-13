@@ -14,7 +14,7 @@ class InterceptorTest extends SpecificationWithJUnit {
     "enable Around interception" in {
 
       val aspect = new Aspect("execution(* *.bar(..))")
-              with LoggingInterceptor
+              with InterceptorAround
               with TransactionInterceptor
 
       val foo = aspect.create[Foo](new FooImpl)
@@ -24,10 +24,11 @@ class InterceptorTest extends SpecificationWithJUnit {
 
     }
 
-    "enable Before interception" in {
+    "enable Before and After interception" in {
 
       val aspect = new Aspect("execution(* *.bar(..))")
               with InterceptBefore
+              with InterceptAfter
 
       val foo = aspect.create[Foo](new FooImpl)
 
@@ -37,6 +38,8 @@ class InterceptorTest extends SpecificationWithJUnit {
 
     "enable After interception" in {
       val aspect = new Aspect("execution(* *.bar(..))")
+              with InterceptBefore
+              with InterceptorAround
               with InterceptAfter
 
       val foo = aspect.create[Foo](new FooImpl)

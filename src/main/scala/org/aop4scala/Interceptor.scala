@@ -34,11 +34,16 @@ trait Interceptor {
  *
  */
 abstract trait InterceptorInvoker extends Interceptor {
-  protected def doInvoke(f: => AnyRef): AnyRef
+
+  def before: AnyRef = null
+  def after(result: AnyRef): AnyRef = result
+  def around(invoke: => AnyRef): AnyRef = invoke
 
   abstract override def invoke(invocation: Invocation): AnyRef =
     if (matches(pointcut, invocation)) {
-      doInvoke(super.invoke(invocation))
+      before
+      val result = around(super.invoke(invocation))
+      after(result)
     } else
       super.invoke(invocation)
 }
@@ -48,12 +53,6 @@ abstract trait InterceptorInvoker extends Interceptor {
  */
 trait BeforeInterceptor extends InterceptorInvoker {
   def before: AnyRef
-
-  protected def doInvoke(f: => AnyRef) = {
-    before
-    f
-  }
-
 }
 
 /**
@@ -61,10 +60,6 @@ trait BeforeInterceptor extends InterceptorInvoker {
  */
 trait AfterInterceptor extends InterceptorInvoker {
   def after(result: AnyRef): AnyRef
-
-  protected def doInvoke(f: => AnyRef) = {
-    after(f)
-  }
 }
 
 /**
@@ -72,8 +67,4 @@ trait AfterInterceptor extends InterceptorInvoker {
  */
 trait AroundInterceptor extends InterceptorInvoker {
   def around(invoke: => AnyRef): AnyRef
-
-  protected def doInvoke(f: => AnyRef) = {
-    around(f)
-  }
 }
