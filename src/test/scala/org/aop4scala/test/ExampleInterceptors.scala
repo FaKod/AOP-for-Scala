@@ -2,18 +2,6 @@ package org.aop4scala.test
 
 import org.aop4scala._
 
-//trait LoggingInterceptorOld extends Interceptor {
-//  //val loggingPointcut = parser.parsePointcutExpression("execution(* *.bar(..))")
-//
-//  abstract override def invoke(invocation: Invocation): AnyRef =
-//    if (matches(pointcut, invocation)) {
-//      println("=====> Enter: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
-//      val result = super.invoke(invocation)
-//      println("=====> Exit: " + invocation.method.getName + " @ " + invocation.target.getClass.getName)
-//      result
-//    } else super.invoke(invocation)
-//}
-
 trait TransactionInterceptor extends Interceptor {
   val matchingDeprecatedAnnotation = classOf[java.lang.Deprecated]
 

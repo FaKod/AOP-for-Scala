@@ -3,6 +3,12 @@ package org.aop4scala
 import java.lang.annotation.Annotation
 import org.aspectj.weaver.tools.{PointcutParser, PointcutExpression}
 
+/**
+ * base trait for interceptors
+ * defines val for pointcut and invoke method whch can be overwritten by
+ * interception traits
+ * @author Christopher Schmidt
+ */
 trait Interceptor {
   protected val parser = PointcutParser.getPointcutParserSupportingAllPrimitivesAndUsingContextClassloaderForResolution
 
@@ -25,15 +31,10 @@ trait Interceptor {
 }
 
 /**
- * 
+ *
  */
 abstract trait InterceptorInvoker extends Interceptor {
-
-//  def before: AnyRef
-//  def after(result: AnyRef): AnyRef
-//  def around(invoke: => AnyRef): AnyRef
-
-  protected def doInvoke(f: => AnyRef):AnyRef
+  protected def doInvoke(f: => AnyRef): AnyRef
 
   abstract override def invoke(invocation: Invocation): AnyRef =
     if (matches(pointcut, invocation)) {
@@ -48,13 +49,6 @@ abstract trait InterceptorInvoker extends Interceptor {
 trait BeforeInterceptor extends InterceptorInvoker {
   def before: AnyRef
 
-//  abstract override def invoke(invocation: Invocation): AnyRef =
-//    if (matches(pointcut, invocation)) {
-//      before
-//      super.invoke(invocation)
-//    } else
-//      super.invoke(invocation)
-
   protected def doInvoke(f: => AnyRef) = {
     before
     f
@@ -68,28 +62,16 @@ trait BeforeInterceptor extends InterceptorInvoker {
 trait AfterInterceptor extends InterceptorInvoker {
   def after(result: AnyRef): AnyRef
 
-//  abstract override def invoke(invocation: Invocation): AnyRef =
-//    if (matches(pointcut, invocation)) {
-//      after(super.invoke(invocation))
-//    } else
-//      super.invoke(invocation)
-
   protected def doInvoke(f: => AnyRef) = {
     after(f)
   }
 }
 
 /**
- * 
+ *
  */
 trait AroundInterceptor extends InterceptorInvoker {
   def around(invoke: => AnyRef): AnyRef
-
-//  abstract override def invoke(invocation: Invocation): AnyRef =
-//    if (matches(pointcut, invocation)) {
-//      around(super.invoke(invocation))
-//    } else
-//      super.invoke(invocation)
 
   protected def doInvoke(f: => AnyRef) = {
     around(f)
