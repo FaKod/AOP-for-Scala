@@ -1,8 +1,36 @@
 Playing around with and trying to re-implement an old "blog entry":http://java.dzone.com/articles/real-world-scala-managing-cros of Jonas Boner.
 
-h2. current look
+h1. AspectJ Load Time Weaving
 
-h1. Around Interception
+Some resources:
+
+* "Configuration Load-Time Weaving":http://eclipse.org/aspectj/doc/released/devguide/ltw-configuration.html
+* "Annotation Based Aspects":http://www.eclipse.org/aspectj/doc/next/adk15notebook/ataspectj.html
+
+to enable load time weaving with maven surefire plugin use the following:
+
+<pre>
+<plugin>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <configuration>
+        <testFailureIgnore>true</testFailureIgnore>
+        <forkMode>once</forkMode>
+        <argLine>
+            -javaagent:${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aj.version}/aspectjweaver-${aj.version}.jar
+        </argLine>
+        <systemProperties>
+            <property>
+                <name>aj.weaving.verbose</name>
+                <value>true</value>
+            </property>
+        </systemProperties>
+    </configuration>
+</plugin>
+</pre>
+
+h1. Aspects with Stackable Traits (current look)
+
+h2. Around Interception
 
 <pre>
 "enable Around interception" in {
@@ -19,7 +47,7 @@ h1. Around Interception
     }
 </pre>
 
-h1. Before Interception
+h2. Before Interception
 
 <pre>
     "enable Before interception" in {
@@ -34,7 +62,7 @@ h1. Before Interception
     }
 </pre>
 
-h1. After Interception
+h2. After Interception
 
 <pre>
     "enable After interception" in {
