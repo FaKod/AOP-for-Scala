@@ -1,0 +1,16 @@
+<aspectj>
+
+    <aspects>
+        <!-- declare existing aspects to the weaver -->
+        <aspect name="org.aop4scala.test.AnnotationAspect"/>
+
+    </aspects>
+
+    <weaver options="-verbose">
+
+        <!-- Dump all types within the "com.foo.bar" package
+             to the "./_ajdump" folder on disk (for diagnostic purposes) -->
+        <dump within="org.aop4scala.*"/>
+    </weaver>
+
+</aspectj>
