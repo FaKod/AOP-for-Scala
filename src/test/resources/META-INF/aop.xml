@@ -2,7 +2,7 @@
 
     <aspects>
         <!-- declare existing aspects to the weaver -->
-        <!--aspect name="org.aop4scala.test.AspectBaseForConditionalPointcuts"/-->
+        <aspect name="org.aop4scala.test.AspectBaseForConditionalPointcuts"/>
         <aspect name="org.aop4scala.test.AnnotationAspect"/>
 
     </aspects>

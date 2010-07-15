@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation._
  */
 
 @Aspect
-class AnnotationAspect extends AspectBaseForConditionalPointcuts {
+class AnnotationAspect {
 
   /**
    * simple pointcut for execution of method lolli
@@ -22,13 +22,13 @@ class AnnotationAspect extends AspectBaseForConditionalPointcuts {
    * intercepts before execution of lolli
    */
   @Before("call2Lolli()")
-  def callFromFoo() = println("before executing lolli")
+  def beforeAdviceCall2Lolli() = println("before executing lolli")
 
   /**
    * around execution of lolli
    */
   @Around("call2Lolli()")
-  def doNothing(thisJoinPoint: ProceedingJoinPoint): Object = {
+  def aroundAdviceCall2Lolli(thisJoinPoint: ProceedingJoinPoint): Object = {
     println("Around Enter executing lolli")
     val result = thisJoinPoint.proceed
     println("Around Exit executing lolli")
@@ -41,24 +41,30 @@ class AnnotationAspect extends AspectBaseForConditionalPointcuts {
    * and get String parameter of method lolli 
    */
   @Pointcut("call(* *.lolli(String)) && args(s) && target(callee)")
-  def someCall(s: String, callee: LolliPop): Unit = {}
+  def call2LolliWithArgs(s: String, callee: LolliPop): Unit = {}
 
-  @Before("someCall(str, callee)")
-  def callFromSomeCall(str:String, callee: LolliPop) = println("before call with: " + str)
-
-
-  /**
-   * conditional pointcut stuff
-   * implementing the java interface to provide a Scala
-   * conditional expression
-   */
-  override def pointcutCondition(s:String):Boolean = {
-    println("Called Condition with string: " + s)
-    true
-  }
-
-  @After("conditionalPointcut(s,aa)")
-  def afterConditionalPointcut(s:String, aa:AspectBaseForConditionalPointcuts) = {
-    println("After Conditional Pointcut. Called with: " + s)  
-  }
+  @Before("call2LolliWithArgs(str, callee)")
+  def beforeAdviceCall2LolliWithArgs(str: String, callee: LolliPop) = println("before call with: " + str + " to " + callee)
 }
+
+
+/**
+ * test for conditional pointcuts
+ */
+//class ConditionalPointcut extends AspectBaseForConditionalPointcuts {
+//
+//  /**
+//   *  conditional pointcut stuff
+//   * implementing the java interface to provide a Scala
+//   * conditional expression
+//   */
+//  override def pointcutCondition(s:String):Boolean = {
+//    println("Called Condition with string: " + s)
+//    true
+//  }
+//
+//  @After("conditionalPointcut(s,aa)")
+//  override def afterConditionalPointcut(s:String, aa:AspectBaseForConditionalPointcuts) = {
+//    println("After Conditional Pointcut. Called with: " + s)
+//  }
+//}
