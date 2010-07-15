@@ -1,7 +1,7 @@
 package org.aop4scala.test
 
 import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.{Aspect, Around, Before, Pointcut}
+import org.aspectj.lang.annotation._
 
 /**
  * User: FaKod
@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.{Aspect, Around, Before, Pointcut}
  */
 
 @Aspect
-class AnnotationAspect {
+class AnnotationAspect extends AspectBaseForConditionalPointcuts {
 
   /**
    * simple pointcut for execution of method lolli
@@ -45,4 +45,20 @@ class AnnotationAspect {
 
   @Before("someCall(str, callee)")
   def callFromSomeCall(str:String, callee: LolliPop) = println("before call with: " + str)
+
+
+  /**
+   * conditional pointcut stuff
+   * implementing the java interface to provide a Scala
+   * conditional expression
+   */
+  override def pointcutCondition(s:String):Boolean = {
+    println("Called Condition with string: " + s)
+    true
+  }
+
+  @After("conditionalPointcut(s,aa)")
+  def afterConditionalPointcut(s:String, aa:AspectBaseForConditionalPointcuts) = {
+    println("After Conditional Pointcut. Called with: " + s)  
+  }
 }
