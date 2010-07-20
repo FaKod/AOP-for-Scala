@@ -51,20 +51,11 @@ class AnnotationAspect {
 /**
  * test for conditional pointcuts
  */
-//class ConditionalPointcut extends AspectBaseForConditionalPointcuts {
-//
-//  /**
-//   *  conditional pointcut stuff
-//   * implementing the java interface to provide a Scala
-//   * conditional expression
-//   */
-//  override def pointcutCondition(s:String):Boolean = {
-//    println("Called Condition with string: " + s)
-//    true
-//  }
-//
-//  @After("conditionalPointcut(s,aa)")
-//  override def afterConditionalPointcut(s:String, aa:AspectBaseForConditionalPointcuts) = {
-//    println("After Conditional Pointcut. Called with: " + s)
-//  }
-//}
+@Aspect
+class ConditionalPointcut extends AspectBaseForConditionalPointcut {
+
+  @After("AspectBaseForConditionalPointcut.conditionalPointcut(s)") //,aa)")
+  def afterConditionalPointcut(s: String): Unit = { //, AspectBaseForConditionalPointcut aa) {
+    println ("After Conditional Pointcut. Called with: " + s)
+  }
+}
